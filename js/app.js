@@ -21,7 +21,7 @@ render: function () {
   var xhr, dataJson, dataCounter, ajaxUrl, arrFilms;
   arrFilms = [];
   xhr = new XMLHttpRequest();
-  ajaxUrl = 'http://swapi.co/api/people/' + this.state.counter+ '/';
+  ajaxUrl = 'https://swapi.co/api/people/' + this.state.counter+ '/';
   console.log(this.state.url);
   xhr.open('GET', ajaxUrl, false);
   xhr.send();

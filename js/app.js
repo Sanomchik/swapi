@@ -20,9 +20,7 @@ render: function () {
   var self = this;
   var xhr, dataJson, dataCounter, ajaxUrl, arrFilms;
   arrFilms = [];
-  var XHR =  XDomainRequest;
-
-  var xhr = new XHR();
+  xhr = new XMLHttpRequest();
   ajaxUrl = 'http://swapi.co/api/people/' + this.state.counter+ '/';
   console.log(this.state.url);
   xhr.open('GET', ajaxUrl, false);
@@ -76,8 +74,8 @@ render: function () {
       </div>
       </div>
       )
-  })
-  return (
+    })
+    return (
     <div className="post">
     <div id="wrap">
     <div className="data-rows">
@@ -96,22 +94,21 @@ render: function () {
     </div>
     </div>
     );
-  console.log(arr)
-}
+    console.log(arr)
+  }
 });
 var App = React.createClass({
   render: function () {
     return (
-      <div className = 'app'>
-      <Article />
-      </div>
-      );
-    }
-  });
+    <div className = 'app'>
+    <Article />
+    </div>
+    );
+  }
+});
 
-  ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-  )
-  ;
-  // 1. Создаём новый объект XMLHttpRequest
+ReactDOM.render(
+<App />,
+document.getElementById('root')
+)
+;

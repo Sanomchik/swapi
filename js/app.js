@@ -20,7 +20,7 @@ render: function () {
   var self = this;
   var xhr, dataJson, dataCounter, ajaxUrl, arrFilms;
   arrFilms = [];
-  var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+  var XHR =  XDomainRequest;
 
   var xhr = new XHR();
   ajaxUrl = 'http://swapi.co/api/people/' + this.state.counter+ '/';

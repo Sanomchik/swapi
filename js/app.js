@@ -2,47 +2,7 @@ var Article = React.createClass({
 
 // START
 getInitialState: function(){
-  return {  counter: 1, count: 88, data: {}};
-},
-componentDidMount: function() {
-  var self = this;
-  var url = 'http://swapi.co/api/people/' + this.state.counter+ '/';
-  console.log('url  : ', url);
-  var arrFilms = [];
-  $.ajax({
-    url: url,
-    dataType: 'json',
-    cache: false,
-    success: function(data) {
-      $.each( data.films, function( keys, value ) {
-        var urlFilms = value
-        $.ajax({
-          url: urlFilms,
-          dataType: 'json',
-          cache: false,
-          success: function(dataFilm) {
-            arrFilms.push(
-              'Episode ' + dataFilm['episode_id'] + ': ' + dataFilm['title']
-              );
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error(ajaxUrl, status, err.toString());
-          }.bind(this)
-        });
-      })
-      console.log('arrFilms  : ', arrFilms)
-    /*for (var i = 0; i < arrFilms.length; i++) {
-        data.films[i] = arrFilms[i];
-      }*/
-      console.log(data)
-      self.setState({
-        data: data
-      })
-    }.bind(this),
-    error: function(xhr, status, err) {
-      console.error(ajaxUrl, status, err.toString());
-    }.bind(this)
-  });
+  return {  counter: 1, count: 88};
 },
 clickNext: function(){
   if (this.state.counter != this.state.count) {
@@ -58,17 +18,64 @@ clickPrev: function(){
 },
 render: function () {
   var self = this;
-  var dataCounter;
-  var dataJson = this.state.data;
+  var xhr, dataJson, dataCounter, ajaxUrl, arrFilms;
+  arrFilms = [];
+  xhr = new XMLHttpRequest();
+  ajaxUrl = 'http://swapi.co/api/people/' + this.state.counter+ '/';
+  console.log(this.state.url);
+  xhr.open('GET', ajaxUrl, false);
+  xhr.send();
+  if (xhr.status == 404) {
+    console.log(xhr.status + ': ' + xhr.statusText); 
+  }
+  var counterFilms = 1;
+  dataJson = JSON.parse(xhr.responseText)
+  for (var keys in dataJson.films) {
+    var ajaxFilms = new XMLHttpRequest();
+    var ajaxFilmsUrl = dataJson.films[counterFilms-1];
+    ajaxFilms.open('GET', ajaxFilmsUrl, false);
+    ajaxFilms.send();
+    var newJson = JSON.parse(ajaxFilms.responseText);
+    arrFilms.push(
+      'Episode ' + newJson['episode_id'] + ': ' + newJson['title']
+      );
+    counterFilms++
+  }
+  arrFilms.sort();
+  for (var i = 0; i < arrFilms.length; i++) {
+    dataJson.films[i] = arrFilms[i];
+  }
+  console.log(arrFilms); 
+  console.log(dataJson); 
   var arr =[];
   var arrFilmsRender =[];
 
   arr.push (
-
+    <div key={1}>
+    <div className="left">
+    <p><strong>Name:</strong> {dataJson.name}</p>
+    <p><strong>Height:</strong> {dataJson.height}</p>
+    <p><strong>Mass:</strong> {dataJson.mass}</p>
+    <p><strong>Hair color:</strong> {dataJson.hair_color}</p>
+    <p><strong>Skin color:</strong> {dataJson.skin_color}</p>
+    <p><strong>Eye color:</strong> {dataJson.eye_color}</p>
+    <p><strong>Birth year:</strong> {dataJson.birth_year}</p>
+    <p><strong>Gender:</strong> {dataJson.gender}</p>
+    </div>
+    </div>
     )
-  console.log(dataJson)
-
-  return (
+  dataJson.films.map(function(v,i) {
+    var a = v.substring(0, 9);
+    var b = v.substring(9);
+    arrFilmsRender.push(
+      <div key={i+1}>
+      <div className="left">
+      <p><strong>{a}</strong>{b}</p>
+      </div>
+      </div>
+      )
+    })
+    return (
     <div className="post">
     <div id="wrap">
     <div className="data-rows">
@@ -87,21 +94,21 @@ render: function () {
     </div>
     </div>
     );
-  console.log(arr)
-}
+    console.log(arr)
+  }
 });
 var App = React.createClass({
   render: function () {
     return (
-      <div className = 'app'>
-      <Article />
-      </div>
-      );
+    <div className = 'app'>
+    <Article />
+    </div>
+    );
   }
 });
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-  )
+<App />,
+document.getElementById('root')
+)
 ;
